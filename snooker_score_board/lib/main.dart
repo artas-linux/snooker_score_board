@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Snooker Score Board',
+      title: 'Snooker Score Board. from GNG boys',
       theme: AppTheme.lightTheme, // Placeholder for light theme
       darkTheme: AppTheme.darkTheme, // Placeholder for dark theme
       themeMode: ThemeMode.system, // Use system theme by default

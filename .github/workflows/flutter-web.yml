@@ -1,4 +1,4 @@
-name: Build and Deploy Flutter Web App
+name: Build and Deploy Flutter Web App to GitHub Pages
 
 on:
   push:
@@ -26,8 +26,8 @@ jobs:
       - name: Build Flutter Web App
         run: |
           cd snooker_score_board
-          flutter build web --release
-
+          flutter build web --release --base-href="/snooker_score_board/"
+          
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
