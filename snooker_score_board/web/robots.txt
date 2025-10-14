@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Disallow admin or private sections if they exist
+Disallow: /admin/
+Disallow: /private/
+
+# Crawl-delay: 1 # Uncomment if you want to limit request rate
+
+# Sitemap location
+Sitemap: /sitemap.xml
