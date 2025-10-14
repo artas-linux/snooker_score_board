@@ -140,3 +140,10 @@ The project includes extensive documentation and enhancement files:
 - `COMPREHENSIVE_TEST_REPORT.md`: Full system analysis and test results
 - `PERFORMANCE_REPORT.md`: Performance metrics and analysis
 - `MCP_SETUP.md`: MCP Chrome DevTools setup instructions
+
+## Qwen Added Memories
+- The Snooker Score Board is a Flutter application with snooker-specific functionality including player scoring, frame tracking, break tracking, and foul penalties. It supports multiple platforms and includes a dark-themed emoji-based ball selection popup. The project uses mise for task automation and includes integration with Model Context Protocol (MCP) Chrome DevTools.
+- Key project paths for Snooker Score Board: /home/archbtw/dev/projects/snooker_score_board (root), /home/archbtw/dev/projects/snooker_score_board/snooker_score_board (Flutter app directory), /home/archbtw/dev/projects/snooker_score_board/.mise.toml (task configuration), /home/archbtw/dev/projects/snooker_score_board/snooker_score_board/pubspec.yaml (dependencies), /home/archbtw/dev/projects/snooker_score_board/LAUNCH_GUIDE.md (launch instructions).
+- When running the Snooker Score Board project, use google-chrome-stable instead of the default Zen browser to ensure compatibility with important extensions. Command: google-chrome-stable http://localhost:8080
+- Complete setup for Snooker Score Board project: 1) Flutter web server on http://localhost:8080, 2) Dart DevTools on http://127.0.0.1:9100, 3) MCP Chrome DevTools server, 4) Opened in Google Chrome using google-chrome-stable to avoid Zen browser.
+- I added the following tasks to the .mise.toml file for the Snooker Score Board project: dev-all (starts all development services in background), stop-all (stops all development services), web (runs Flutter web server), and web-bg (runs Flutter web server in background).

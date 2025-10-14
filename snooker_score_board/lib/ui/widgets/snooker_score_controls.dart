@@ -86,35 +86,134 @@ class SnookerScoreControls extends StatelessWidget {
   }
   
   void _showColorBallSelector(BuildContext context, GameProvider gameProvider) {
-    showModalBottomSheet(
+    showDialog(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (BuildContext context) {
-        return Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: DraggableScrollableSheet(
-            initialChildSize: 0.6,
-            minChildSize: 0.4,
-            maxChildSize: 0.8,
-            builder: (BuildContext context, ScrollController scrollController) {
-              return ColorBallSelector(
-                onBallSelected: (int points) {
-                  gameProvider.addStandardBall(playerId, points: points);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('$points point ball added for $playerName'),
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          contentPadding: EdgeInsets.zero,
+          insetPadding: const EdgeInsets.all(30),
+          content: Container(
+            width: 320,
+            padding: const EdgeInsets.all(20.0),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade900, // Dark background
+              borderRadius: const BorderRadius.all(Radius.circular(20)), // More rounded corners
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 10,
+                  offset: const Offset(0, 4), // Shadow position
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: double.infinity,
+                  alignment: Alignment.center,
+                  child: Text(
+                    'SELECT BALL VALUE',
+                    style: TextStyle(
+                      fontSize: 18, 
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white, // White text on dark background
+                      letterSpacing: 1.2,
                     ),
-                  );
-                },
-              );
-            },
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Wrap(
+                  spacing: 16.0, // Increased spacing
+                  runSpacing: 16.0, // Increased spacing
+                  alignment: WrapAlignment.center,
+                  children: [
+                    // Red ball (1 point)
+                    _buildBallButton(dialogContext, gameProvider, '🔴', 1),
+                    // Yellow ball (2 points)
+                    _buildBallButton(dialogContext, gameProvider, '🟡', 2),
+                    // Green ball (3 points)
+                    _buildBallButton(dialogContext, gameProvider, '🟢', 3),
+                    // Brown ball (4 points)
+                    _buildBallButton(dialogContext, gameProvider, '🟤', 4),
+                    // Blue ball (5 points)
+                    _buildBallButton(dialogContext, gameProvider, '🔵', 5),
+                    // Pink ball (6 points)
+                    _buildBallButton(dialogContext, gameProvider, '🟣', 6),
+                    // Black ball (7 points)
+                    _buildBallButton(dialogContext, gameProvider, '⚫', 7),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  width: double.infinity,
+                  child: TextButton(
+                    onPressed: () => Navigator.of(dialogContext).pop(),
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.white, // White text
+                      backgroundColor: Colors.red.shade700, // Red cancel button
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12), // More rounded
+                      ),
+                    ),
+                    child: const Text('CANCEL', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
+    );
+  }
+  
+  Widget _buildBallButton(BuildContext context, GameProvider gameProvider, String emoji, int points) {
+    return Semantics(
+      button: true,
+      label: 'Select $points point ball',
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).pop(); // Close the dialog
+          gameProvider.addStandardBall(playerId, points: points);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('$points point ball added for $playerName'),
+            ),
+          );
+        },
+        child: Container(
+          width: 64,  // Larger size for better visibility
+          height: 64,  // Larger size for better visibility
+          decoration: BoxDecoration(
+            color: Colors.grey.shade800, // Dark container for emoji
+            borderRadius: BorderRadius.circular(16), // More rounded
+            border: Border.all(
+              color: Colors.grey.shade600, // Darker border
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: const Offset(0, 2), // Shadow position
+              ),
+            ],
+          ),
+          child: Center(
+            child: Text(
+              emoji,
+              style: const TextStyle(
+                fontSize: 32, // Much larger emoji for better visibility
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

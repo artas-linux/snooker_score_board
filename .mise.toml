@@ -14,3 +14,33 @@ run = "flutter build apk"
 # Clean the project
 [tasks.clean]
 run = "flutter clean"
+
+# Start all development services
+[tasks.dev-all]
+run = [
+  "cd snooker_score_board && flutter run -d web-server --web-port=8080 &",
+  "sleep 5",
+  "dart devtools --machine --port 9100 &",
+  "sleep 3", 
+  "npx chrome-devtools-mcp@latest --headless --logFile /tmp/mcp.log &"
+]
+description = "Start all development services"
+
+# Stop all services
+[tasks.stop-all]
+run = [
+  "pkill -f 'flutter.*web-server' || echo 'Flutter server not running'",
+  "pkill -f 'dart.*devtools' || echo 'DevTools not running'",
+  "pkill -f 'chrome-devtools-mcp' || echo 'MCP server not running'"
+]
+description = "Stop all development services"
+
+# Run Flutter web server only
+[tasks.web]
+run = "cd snooker_score_board && flutter run -d web-server --web-port=8080"
+description = "Run Flutter web server"
+
+# Run Flutter web server in background
+[tasks.web-bg]
+run = "cd snooker_score_board && flutter run -d web-server --web-port=8080 &"
+description = "Run Flutter web server in background"

@@ -13,6 +13,8 @@ class Game {
   GameStatus status;
   int currentFrame;
   int currentFrameScore; // Not strictly needed for individual player scores, but good for overall game context
+  DateTime? gameTimerStart; // Start time for the timer when the game begins
+  Duration gameDuration; // The total duration of the game
 
   Game({
     required this.id,
@@ -22,6 +24,8 @@ class Game {
     this.status = GameStatus.active,
     this.currentFrame = 1,
     this.currentFrameScore = 0,
+    this.gameTimerStart,
+    this.gameDuration = const Duration(),
   });
 
   // Factory constructor for creating a Game from a map
@@ -36,6 +40,8 @@ class Game {
       status: GameStatus.values.firstWhere((e) => e.toString() == map['status']),
       currentFrame: map['currentFrame'] as int? ?? 1,
       currentFrameScore: map['currentFrameScore'] as int,
+      gameTimerStart: map['gameTimerStart'] != null ? DateTime.parse(map['gameTimerStart'] as String) : null,
+      gameDuration: Duration(milliseconds: map['gameDuration'] as int? ?? 0),
     );
   }
 
@@ -49,6 +55,8 @@ class Game {
       'status': status.toString(),
       'currentFrame': currentFrame,
       'currentFrameScore': currentFrameScore,
+      'gameTimerStart': gameTimerStart?.toIso8601String(),
+      'gameDuration': gameDuration.inMilliseconds,
     };
   }
 

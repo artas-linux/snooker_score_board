@@ -4,6 +4,7 @@ import 'package:snooker_score_board/providers/game_provider.dart';
 import 'package:snooker_score_board/ui/screens/game_results_screen.dart';
 import 'package:snooker_score_board/ui/widgets/snooker_score_controls.dart';
 import 'package:snooker_score_board/ui/widgets/score_animation_widget.dart';
+import 'package:snooker_score_board/ui/widgets/stopwatch_widget.dart';
 
 class GameBoardScreen extends StatefulWidget {
   const GameBoardScreen({super.key});
@@ -53,22 +54,7 @@ class _GameBoardScreenState extends State<GameBoardScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      'Game ID: ${currentGame.id}',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Status: ${currentGame.status.name}',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
+
                     Text(
                       'Current Frame: ${currentGame.currentFrame}',
                       textAlign: TextAlign.center,
@@ -76,6 +62,23 @@ class _GameBoardScreenState extends State<GameBoardScreen> {
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).primaryColor,
                       ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.timer, size: 24),
+                        const SizedBox(width: 8),
+                        const Text(
+                          'Game Time:',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        StopwatchWidget(),
+                      ],
                     ),
                   ],
                 ),

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:snooker_score_board/models/game.dart';
@@ -10,6 +11,7 @@ class GameProvider extends ChangeNotifier {
   final Uuid _uuid = const Uuid();
   final GameStorageService _storageService = GameStorageService();
   List<Game> _gameHistory = [];
+  Timer? _timer;
 
   Game? get currentGame => _currentGame;
   List<Game> get gameHistory => _gameHistory;
@@ -36,7 +38,12 @@ class GameProvider extends ChangeNotifier {
       id: _uuid.v4(),
       startTime: DateTime.now(),
       players: players,
+      gameTimerStart: DateTime.now(), // Start the timer when the game starts
     );
+    
+    // Start the timer that updates every second
+    _startTimer();
+    
     notifyListeners();
   }
 
@@ -212,6 +219,13 @@ class GameProvider extends ChangeNotifier {
     notifyListeners();
   }
   
+  void updateGameTimer() {
+    if (_currentGame != null && _currentGame!.gameTimerStart != null) {
+      _currentGame!.gameDuration = DateTime.now().difference(_currentGame!.gameTimerStart!);
+      notifyListeners();
+    }
+  }
+  
   void addStandardBall(String playerId, {required int points}) {
     addScore(playerId, points);
   }
@@ -241,10 +255,63 @@ class GameProvider extends ChangeNotifier {
     }
     _currentGame!.endTime = DateTime.now();
     _currentGame!.status = GameStatus.completed;
+    
+    // Update the game duration
+    if (_currentGame!.gameTimerStart != null) {
+      _currentGame!.gameDuration = DateTime.now().difference(_currentGame!.gameTimerStart!);
+    }
+    
     await _storageService.saveGame(_currentGame!); // Save the completed game
     _gameHistory.add(_currentGame!); // Add to history
     _currentGame = null; // Clear current game
+    
+    // Stop the timer when the game ends
+    _stopTimer();
+    
     notifyListeners();
+  }
+
+  void _startTimer() {
+    // Stop any existing timer
+    _stopTimer();
+    
+    // Create a new timer that updates every second
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      updateGameTimer();
+    });
+  }
+  
+  void _stopTimer() {
+    _timer?.cancel();
+    _timer = null;
+  }
+
+  // Method to get the current game duration for active games
+  Duration getGameDuration() {
+    if (_currentGame == null || _currentGame!.gameTimerStart == null) {
+      return const Duration();
+    }
+    
+    // If the game is completed, return the stored duration
+    if (_currentGame!.status == GameStatus.completed && _currentGame!.gameDuration != Duration.zero) {
+      return _currentGame!.gameDuration;
+    }
+    
+    // Otherwise, calculate the elapsed time from the start
+    return DateTime.now().difference(_currentGame!.gameTimerStart!);
+  }
+
+  Future<void> _notifyListenersAsync() async {
+    await Future.microtask(() => {});
+    if (_currentGame != null) {
+      notifyListeners();
+    }
+  }
+
+  @override
+  void dispose() {
+    _stopTimer();
+    super.dispose();
   }
 
   // TODO: Implement score correction, game history loading, etc.

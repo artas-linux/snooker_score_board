@@ -1,0 +1,36 @@
+name: Build and Deploy Flutter Web App
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.9.2' # Use the same version as your project
+          channel: 'stable'
+
+      - name: Get dependencies
+        run: |
+          cd snooker_score_board
+          flutter pub get
+
+      - name: Build Flutter Web App
+        run: |
+          cd snooker_score_board
+          flutter build web --release
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./snooker_score_board/build/web
+          publish_branch: gh-pages
