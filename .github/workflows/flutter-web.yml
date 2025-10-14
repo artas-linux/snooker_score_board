@@ -19,14 +19,10 @@ jobs:
           channel: 'stable'
 
       - name: Get dependencies
-        run: |
-          cd snooker_score_board
-          flutter pub get
+        run: flutter pub get
 
       - name: Build Flutter Web App
-        run: |
-          cd snooker_score_board
-          flutter build web --release --base-href="/snooker_score_board/"
+        run: flutter build web --release --base-href="/snooker_score_board/"
           
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
