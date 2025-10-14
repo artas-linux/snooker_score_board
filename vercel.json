@@ -1,0 +1,15 @@
+{
+  "public": true,
+  "builds": [
+    {
+      "src": "snooker_score_board/build/web/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "snooker_score_board/build/web/$1"
+    }
+  ]
+}
