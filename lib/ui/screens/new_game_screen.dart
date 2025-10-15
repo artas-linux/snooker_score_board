@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:snooker_score_board/providers/game_provider.dart';
 import 'package:snooker_score_board/ui/screens/game_board_screen.dart';
 import 'package:snooker_score_board/ui/screens/game_history_screen.dart';
+import 'package:snooker_score_board/ui/utils/notification_utils.dart';
 import 'package:snooker_score_board/utils/accessibility_utils.dart';
 
 class NewGameScreen extends StatefulWidget {
@@ -45,8 +46,9 @@ class _NewGameScreenState extends State<NewGameScreen> {
           .toList();
 
       if (playerNames.length < 2) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please enter at least 2 player names.')),
+        NotificationUtils.showPopupNotification(
+          context,
+          'Please enter at least 2 player names.',
         );
         return;
       }

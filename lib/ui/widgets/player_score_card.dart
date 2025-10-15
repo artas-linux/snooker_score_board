@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:snooker_score_board/providers/game_provider.dart';
+import 'package:snooker_score_board/ui/utils/notification_utils.dart';
 import 'package:snooker_score_board/ui/widgets/score_animation_widget.dart';
 import 'package:snooker_score_board/models/player.dart';
 
@@ -78,10 +79,9 @@ class _AnimatedPlayerScoreCardState extends State<AnimatedPlayerScoreCard> {
                         icon: Icon(Icons.undo, color: Colors.orange),
                         onPressed: () {
                           gameProvider.undoLastScore(widget.player.id);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Last score undone for ${widget.player.name}'),
-                            ),
+                          NotificationUtils.showPopupNotification(
+                            context,
+                            'Last score undone for ${widget.player.name}',
                           );
                         },
                         tooltip: 'Undo Last Score',

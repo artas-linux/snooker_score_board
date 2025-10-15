@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:snooker_score_board/providers/game_provider.dart';
 import 'package:snooker_score_board/ui/screens/game_results_screen.dart';
+import 'package:snooker_score_board/ui/utils/notification_utils.dart';
 import 'package:snooker_score_board/ui/widgets/snooker_score_controls.dart';
 import 'package:snooker_score_board/ui/widgets/score_animation_widget.dart';
 import 'package:snooker_score_board/ui/widgets/stopwatch_widget.dart';
@@ -99,10 +100,9 @@ class _GameBoardScreenState extends State<GameBoardScreen> {
                           _selectedPlayerId = player.id;  // Select this player
                         }
                       });
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('${_selectedPlayerId == player.id ? 'Selected' : 'Deselected'} ${player.name}'),
-                        ),
+                      NotificationUtils.showPopupNotification(
+                        context,
+                        '${_selectedPlayerId == player.id ? 'Selected' : 'Deselected'} ${player.name}',
                       );
                     },
                     child: Card(
@@ -154,10 +154,9 @@ class _GameBoardScreenState extends State<GameBoardScreen> {
                                       icon: Icon(Icons.undo, color: Colors.orange),
                                       onPressed: () {
                                         Provider.of<GameProvider>(context, listen: false).undoLastScore(player.id);
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(
-                                            content: Text('Last score undone for ${player.name}'),
-                                          ),
+                                        NotificationUtils.showPopupNotification(
+                                          context,
+                                          'Last score undone for ${player.name}',
                                         );
                                       },
                                       tooltip: 'Undo Last Score',

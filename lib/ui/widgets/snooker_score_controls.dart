@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:snooker_score_board/providers/game_provider.dart';
+import 'package:snooker_score_board/ui/utils/notification_utils.dart';
 import 'package:snooker_score_board/ui/widgets/color_ball_selector.dart';
 import 'package:snooker_score_board/utils/accessibility_utils.dart';
 
@@ -40,10 +41,9 @@ class SnookerScoreControls extends StatelessWidget {
                         child: ElevatedButton.icon(
                           onPressed: () {
                             gameProvider.applyPenaltyToPlayer(playerId, points: 4);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Foul penalty applied to $playerName (-4 pts)'),
-                              ),
+                            NotificationUtils.showPopupNotification(
+                              context,
+                              'Foul penalty applied to $playerName (-4 pts)',
                             );
                           },
                           icon: const Icon(Icons.warning, color: Colors.white),
@@ -179,10 +179,9 @@ class SnookerScoreControls extends StatelessWidget {
         onTap: () {
           Navigator.of(context).pop(); // Close the dialog
           gameProvider.addStandardBall(playerId, points: points);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('$points point ball added for $playerName'),
-            ),
+          NotificationUtils.showPopupNotification(
+            context,
+            '$points point ball added for $playerName',
           );
         },
         child: Container(
