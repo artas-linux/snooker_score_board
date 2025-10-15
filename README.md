@@ -5,7 +5,7 @@
 ## ✨ Features
 
 - 👥 Multi-player support (2+ players)
-- 🎯 Snooker-specific scoring (ball values: Red=1, Yellow=2, Green=3, Brown=4, Blue=5, Pink=6 🌸, Black=7)
+- 🎯 Snooker-specific scoring (ball values: Red=1, Yellow=2, Green=3, Brown=4, Blue=5, Pink=6 🎱, Black=7)
 - 🏆 Frame tracking and management
 - 🔥 Break tracking with century break detection
 - ⚠️ Foul penalty handling
