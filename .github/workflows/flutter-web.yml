@@ -9,13 +9,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.9.2' # Use the same version as your project
+          flutter-version: '3.35.5'
           channel: 'stable'
 
       - name: Get dependencies
@@ -23,10 +23,10 @@ jobs:
 
       - name: Build Flutter Web App
         run: flutter build web --release --base-href="/snooker_score_board/"
-          
+
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./snooker_score_board/build/web
+          publish_dir: ./build/web
           publish_branch: gh-pages
