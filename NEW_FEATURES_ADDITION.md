@@ -9,6 +9,11 @@
 ### 🎨 **Compact Popup Design**
 - **Add Score Button**: Kept the preferred bright green color for better visibility
 - **Foul Button**: Maintained as dark red (Colors.red.shade700) for contrast
+- **Ball Value Display**: Each colored ball now displays its point value on the emoji itself
+
+### 🎯 **Enhanced Ball Selector**
+- **Value Indicators**: Point values are now clearly visible on each ball emoji
+- **Improved UI**: Better visual hierarchy with values overlaid on balls
 - **Emoji Popup**: Compact dark popup (Colors.grey.shade900) with fixed width (300px)
 - **Larger Emojis**: Enlarged emoji size to 28px for better visibility
 - **Larger Containers**: Increased emoji containers to 52x52 with more rounded corners

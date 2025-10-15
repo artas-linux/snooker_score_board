@@ -203,13 +203,38 @@ class SnookerScoreControls extends StatelessWidget {
               ),
             ],
           ),
-          child: Center(
-            child: Text(
-              emoji,
-              style: const TextStyle(
-                fontSize: 32, // Much larger emoji for better visibility
+          child: Stack(
+            children: [
+              // Center the emoji
+              Align(
+                alignment: Alignment.center,
+                child: Text(
+                  emoji,
+                  style: const TextStyle(
+                    fontSize: 24, // Slightly smaller emoji to make room for the number
+                  ),
+                ),
               ),
-            ),
+              // Display the point value in the bottom right corner
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: Colors.black54,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(
+                    points.toString(),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
