@@ -7,9 +7,18 @@ run = "flutter pub get"
 [tasks.dev]
 run = "flutter run"
 
+[tasks.run-web]
+run = "flutter run -d chrome"
+
+[tasks.test]
+run = "flutter test"
+
 # Build the application (Android)
 [tasks.build]
 run = "flutter build apk"
+
+[tasks.build-web]
+run = "flutter build web"
 
 # Clean the project
 [tasks.clean]

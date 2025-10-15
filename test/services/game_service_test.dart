@@ -5,6 +5,8 @@ import 'package:snooker_score_board/providers/game_provider.dart';
 import 'package:uuid/uuid.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences.setMockInitialValues({});
   group('CenturyBreak Tests', () {
     late GameProvider gameProvider;
 
