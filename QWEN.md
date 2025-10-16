@@ -1,8 +1,8 @@
-# QWEN.md - Snooker Score Board Project
+# Snooker Score Board Development Notes
 
 ## Project Overview
 
-The Snooker Score Board is a Flutter application designed to provide a digital scoreboard for snooker games. The app has been significantly enhanced with snooker-specific functionality while maintaining all existing features. It provides a complete solution for tracking scores, frames, breaks, and other snooker-specific metrics during gameplay.
+The Snooker Score Board is a Flutter application designed to provide a digital scoreboard for snooker games. The app includes snooker-specific functionality and provides a complete solution for tracking scores, frames, breaks, and other snooker-specific metrics during gameplay.
 
 ### Main Technologies
 - **Framework**: Flutter (Dart)
@@ -21,28 +21,10 @@ The Snooker Score Board is a Flutter application designed to provide a digital s
 - Player selection and highlighting
 - Dark-themed emoji-based ball selection popup
 
-## Project Structure
-
-```
-snooker_score_board/
-├── lib/
-│   ├── models/           # Data models (Player, Game)
-│   ├── providers/        # State management (GameProvider)
-│   ├── services/         # Business logic services
-│   ├── ui/              # User interface components
-│   │   ├── screens/     # Game screens (NewGame, GameBoard, Results, History)
-│   │   ├── themes/      # App theming
-│   │   └── widgets/     # Reusable UI components (SnookerScoreControls, ColorBallSelector)
-│   └── utils/           # Utility functions
-├── test/                # Unit and integration tests
-├── pubspec.yaml         # Project dependencies and config
-└── .mise.toml          # Task automation
-```
-
 ## Building and Running
 
 ### Prerequisites
-- Flutter SDK (version 3.9.2 or higher)
+- Flutter SDK (version 3.35.5 or higher)
 - Dart SDK
 - Android SDK (for Android builds)
 - iOS SDK (for iOS builds)
@@ -60,9 +42,10 @@ mise run dev
 flutter run
 
 # Build for Android
-mise run build
-# or
 flutter build apk
+
+# Build for Web
+flutter build web
 
 # Clean the project
 mise run clean
@@ -76,74 +59,45 @@ flutter clean
 - Web
 - Desktop (Linux, Windows, macOS)
 
-## Development Conventions
+## Project Structure
 
-### Code Structure
-- **Models**: Pure Dart classes with serialization/deserialization methods
-- **Providers**: Business logic and state management using ChangeNotifier
-- **UI Components**: Separated into screens, themes, and reusable widgets
-- **Services**: Data access and business logic layer
+The application follows standard Flutter project structure with:
+- `lib/models/` - Data models (Player, Game)
+- `lib/providers/` - State management (GameProvider)
+- `lib/services/` - Business logic services
+- `lib/ui/` - User interface components (screens, themes, widgets)
+- `test/` - Unit and integration tests
 
-### UI Components
-- **SnookerScoreControls**: Custom widget for snooker-specific score controls
-- **ColorBallSelector**: Emoji-based ball selection popup with compact dark theme
-- **GameProvider**: Central state management for game state
+## Available Mise Tasks
 
-### State Management
-- Uses Provider pattern with ChangeNotifier
-- Game state is managed through GameProvider
-- UI components interact with provider methods for updates
-
-### Testing
-- Unit tests in the `test/` directory
-- Integration tests for UI flows
-- Code follows Flutter best practices for testability
-
-## Enhanced Features
-
-### Player Controls
-- **Two dedicated buttons per player**: Clean UI with just two main action buttons
-- **Red Foul button**: Apply foul penalties that subtract points from the current player
-- **Green Add Score button**: Opens emoji-based ball selector popup for intuitive scoring
-- **Undo button**: Orange undo button (Icons.undo) for each player to undo their last score
-- **Player Selection**: Tap on any player's card to highlight them with visual effects
-
-### Scoring System
-- **Snooker-specific scoring**: Quick buttons for standard ball values (Red=1, Yellow=2, Green=3, Brown=4, Blue=5, Pink=6, Black=7)
-- **Foul penalties**: Dedicated buttons for common foul values (4, 5, 6, 7+ points)
-- **Visual ball selector popup**: Compact dark popup (300px wide) with enlarged emoji representations
-- **Emoji containers**: 52x52 size with 28px emoji for better visibility
-
-### Tracking Features
-- **Frame tracking**: Track and award frames to players with frame counter
-- **Break tracking**: Track current and highest breaks for each player
-- **Century break detection**: Automatically detect and record breaks of 100+ points
-
-### UI Enhancements
-- **Theme**: Dark-themed popup with fixed width and large emojis
-- **Visual feedback**: Selected player cards get dark grey background with white text
-- **Responsive design**: Works across different screen sizes and orientations
-
-## MCP Integration
-
-The project includes integration with Model Context Protocol (MCP) Chrome DevTools, allowing for advanced debugging and development features:
-- Chrome DevTools MCP Server v0.8.1
-- Remote debugging capabilities
-- AI-assisted development tools integration
-- Performance analysis tools
-
-## Files and Documentation
-
-The project includes extensive documentation and enhancement files:
-- `ENHANCEMENTS_SUMMARY.md`: Complete summary of all added features
-- `LAUNCH_GUIDE.md`: Detailed instructions on how to launch all services
-- `COMPREHENSIVE_TEST_REPORT.md`: Full system analysis and test results
-- `PERFORMANCE_REPORT.md`: Performance metrics and analysis
-- `MCP_SETUP.md`: MCP Chrome DevTools setup instructions
+This project uses mise for task automation:
+- `mise run setup` - Initial project setup
+- `mise run install` - Install dependencies
+- `mise run dev` - Start development server
+- `mise run run-web` - Start web development server
+- `mise run test` - Run tests
+- `mise run build-android` - Build Android APK
+- `mise run build-ios` - Build iOS IPA
+- `mise run build-web` - Build web version
+- `mise run clean` - Clean project
+- `mise run help` - Show all available commands
 
 ## Qwen Added Memories
-- The Snooker Score Board is a Flutter application with snooker-specific functionality including player scoring, frame tracking, break tracking, and foul penalties. It supports multiple platforms and includes a dark-themed emoji-based ball selection popup. The project uses mise for task automation and includes integration with Model Context Protocol (MCP) Chrome DevTools.
-- Key project paths for Snooker Score Board: /home/archbtw/dev/projects/snooker_score_board (root), /home/archbtw/dev/projects/snooker_score_board/snooker_score_board (Flutter app directory), /home/archbtw/dev/projects/snooker_score_board/.mise.toml (task configuration), /home/archbtw/dev/projects/snooker_score_board/snooker_score_board/pubspec.yaml (dependencies), /home/archbtw/dev/projects/snooker_score_board/LAUNCH_GUIDE.md (launch instructions).
-- When running the Snooker Score Board project, use google-chrome-stable instead of the default Zen browser to ensure compatibility with important extensions. Command: google-chrome-stable http://localhost:8080
-- Complete setup for Snooker Score Board project: 1) Flutter web server on http://localhost:8080, 2) Dart DevTools on http://127.0.0.1:9100, 3) MCP Chrome DevTools server, 4) Opened in Google Chrome using google-chrome-stable to avoid Zen browser.
-- I added the following tasks to the .mise.toml file for the Snooker Score Board project: dev-all (starts all development services in background), stop-all (stops all development services), web (runs Flutter web server), and web-bg (runs Flutter web server in background).
+- Successfully reset the Snooker Score Board project by: 1) Merging all work branches into main, 2) Cleaning up unnecessary files and directories, 3) Updating GitHub Actions workflow, 4) Updating documentation, 5) Updating mise.toml with proper configuration, 6) Testing the web app which now runs on http://localhost:8080. The project is cleaned up and ready for GitHub.
+- Successfully implemented a foul button with negative score functionality in the Snooker Score Board app. The changes included: 1) Modified ColorBallSelector widget to accept negative scores using a useNegativeScores parameter, 2) Added a new "Foul-" button to SnookerScoreControls that opens the ball selector with negative values, 3) Added applyFoulWithSpecificValue method in GameProvider to handle negative scores, 4) The functionality allows selecting a ball value for the foul which is subtracted from the player's score, properly resetting the current break and preventing scores from going below zero. The web app is running at http://localhost:8080.
+- Successfully updated all references from 'chrome' to 'google-chrome-stable' in the project: 1) Updated the dev-web task in .mise.toml to use google-chrome-stable as the device identifier, 2) Updated the dart devtools -d chrome command in devtools.md to use google-chrome-stable, 3) Updated the flutter run -d chrome command in README.md to use google-chrome-stable.
+- To properly restart the Snooker Score Board web application: 1) Kill all Flutter processes with 'pkill -f flutter || true', 2) Kill all processes on port 8080 with 'fuser -k 8080/tcp || true', 3) Wait for processes to fully terminate with 'sleep 2', 4) Run 'mise run dev-web' to restart the application.
+- To properly restart the Snooker Score Board web application and open in Chrome: 1) Kill all Flutter processes with 'pkill -f flutter || true', 2) Kill all processes on port 8080 with 'fuser -k 8080/tcp || true', 3) Wait for processes to fully terminate with 'sleep 2', 4) Run 'mise run dev-web' to restart the application, 5) Open the application in Chrome with 'google-chrome-stable http://localhost:8080' or 'xdg-open http://localhost:8080' if available.
+- To properly restart the Snooker Score Board web application: 1) Kill all Flutter processes with 'pkill -f flutter || true', 2) Kill all processes on port 8080 with 'fuser -k 8080/tcp || true', 3) Wait for processes to fully terminate with 'sleep 2', 4) Run 'mise run dev-web' to restart the application, 5) Open the application in Chrome with 'google-chrome-stable http://localhost:8080' or 'xdg-open http://localhost:8080' if available.
+- To properly restart the Snooker Score Board web application: 1) Kill all Flutter processes with 'pkill -f flutter || true', 2) Kill all processes on port 8080 with 'fuser -k 8080/tcp || true', 3) Wait for processes to fully terminate with 'sleep 2', 4) Run 'mise run dev-web' to restart the application, 5) Open the application in Chrome with 'google-chrome-stable http://localhost:8080' or 'xdg-open http://localhost:8080' if available.
+- The restart-web task in mise.toml was fixed by changing from an array of commands to a shell script syntax with set -e. The working version properly: 1) kills all Flutter processes with 'pkill -f flutter', 2) kills processes on port 8080 with 'fuser -k 8080/tcp', 3) waits 2 seconds, then 4) starts the Flutter web server with 'flutter run -d web-server --web-port 8080'. Using shell script syntax in mise tasks provides more reliable command execution than an array of commands.
+- MCP Server Performance Test Results for Snooker Score Board project:
+- Target: localhost:9100
+- Connection Speed: Average 3.79ms
+- Response Time: Average 2.64ms 
+- Throughput: 1988.83 connections/sec
+- Reliability: 100% success rate (10/10 connections successful)
+- Total test duration: 379.22ms
+- The server is highly responsive and optimized for AI-assisted development workflows
+- The build_runner package was added to the dev_dependencies in pubspec.yaml, and the watch task in mise.toml was reverted to its original form. The watch command now successfully runs 'dart pub run build_runner watch --delete-conflicting-outputs' to watch for file changes and auto-generate code. This enables automatic regeneration of code based on annotations like json_serializable, freezed, built_value, etc.
+- Successfully implemented flying score animations and score highlighting in the Snooker Score Board app. When a player selects a colored ball, a "+X" bubble flies from the selection to the player's score, and the score temporarily highlights in green. Changes included: 1) Creating FlyingScoreAnimation and ScoreHighlightWidget, 2) Updating GameProvider to track last ball scored, 3) Integrating animations into AnimatedPlayerScoreCard with proper positioning and timing.

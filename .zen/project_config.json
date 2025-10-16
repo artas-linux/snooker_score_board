@@ -1,0 +1,50 @@
+{
+  "project": {
+    "name": "snooker_score_board",
+    "type": "flutter",
+    "description": "A Flutter application for maintaining a scoreboard while playing snooker",
+    "version": "1.0.0"
+  },
+  "tracking": {
+    "enabled": true,
+    "session_tracking": true,
+    "analytics": {
+      "collect_usage": true,
+      "collect_errors": true
+    }
+  },
+  "mcp_servers": {
+    "primary": "zen",
+    "fallback": ["dart", "sequential-thinking"]
+  },
+  "tools": {
+    "enabled": [
+      "chat",
+      "clink",
+      "thinkdeep",
+      "planner",
+      "consensus",
+      "codereview",
+      "debug",
+      "apilookup",
+      "listmodels",
+      "version"
+    ],
+    "disabled": [
+      "secaudit",
+      "docgen",
+      "refactor",
+      "analyze",
+      "tracer",
+      "testgen"
+    ]
+  },
+  "ai_settings": {
+    "model_preferences": {
+      "primary": "auto",
+      "fallback": ["gpt-4o", "claude-3-5-sonnet", "gemini-2.0-flash-exp"]
+    },
+    "thinking_mode": "high",
+    "context_window": 128000
+  }
+}

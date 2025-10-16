@@ -40,35 +40,44 @@ class GameProvider extends ChangeNotifier {
       players: players,
       gameTimerStart: DateTime.now(), // Start the timer when the game starts
     );
-    
+
     // Start the timer that updates every second
     _startTimer();
-    
+
     notifyListeners();
   }
+
+  int? _latestScoreChange;
+  int? _lastBallScored;
 
   void addScore(String playerId, int points) {
     if (_currentGame == null) {
       throw StateError('No active game to add score to.');
     }
 
-    final playerIndex = _currentGame!.players.indexWhere((p) => p.id == playerId);
+    final playerIndex = _currentGame!.players.indexWhere(
+      (p) => p.id == playerId,
+    );
     if (playerIndex == -1) {
       throw ArgumentError('Player with ID $playerId not found.');
     }
 
     final player = _currentGame!.players[playerIndex];
-    
+
     // Store previous state for potential undo
     player.lastScore = points;
     player.scoreHistory = List.from(player.scoreHistory)..add(points);
-    
+
     // Update score
     player.score += points;
-    
+
+    // Track latest score change for animation
+    _latestScoreChange = points;
+    _lastBallScored = points; // Track the last ball scored for animation
+
     // Update current break
     player.currentBreak += points;
-    
+
     // Update highest break if needed
     if (player.currentBreak > player.highestBreak) {
       player.highestBreak = player.currentBreak;
@@ -79,49 +88,69 @@ class GameProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  int? get latestScoreChange => _latestScoreChange;
+  int? get lastBallScored => _lastBallScored;
   
+  void clearLastBallScored() {
+    _lastBallScored = null;
+    notifyListeners();
+  }
+
   void endCurrentBreak(String playerId) {
     if (_currentGame == null) {
       throw StateError('No active game to end break for.');
     }
 
-    final playerIndex = _currentGame!.players.indexWhere((p) => p.id == playerId);
+    final playerIndex = _currentGame!.players.indexWhere(
+      (p) => p.id == playerId,
+    );
     if (playerIndex == -1) {
       throw ArgumentError('Player with ID $playerId not found.');
     }
 
     final player = _currentGame!.players[playerIndex];
-    
+
     // Reset current break to 0
     player.currentBreak = 0;
 
     notifyListeners();
   }
-  
+
   void undoLastScore(String playerId) {
     if (_currentGame == null) {
       throw StateError('No active game to undo score for.');
     }
 
-    final playerIndex = _currentGame!.players.indexWhere((p) => p.id == playerId);
+    final playerIndex = _currentGame!.players.indexWhere(
+      (p) => p.id == playerId,
+    );
     if (playerIndex == -1) {
       throw ArgumentError('Player with ID $playerId not found.');
     }
 
     final player = _currentGame!.players[playerIndex];
-    
+
     if (player.scoreHistory.isEmpty) {
       // If there's no score history, use the lastScore
       if (player.lastScore > 0) {
         player.score -= player.lastScore;
+        // Track latest score change for animation (negative value since we're undoing)
+        _latestScoreChange = -player.lastScore;
         player.currentBreak = 0; // Reset the current break when undoing
         player.lastScore = 0;
+        
+        // Clear last ball scored when undoing
+        _lastBallScored = null;
       }
     } else {
       // Use the score history
       final lastScore = player.scoreHistory.removeLast();
       player.score -= lastScore;
-      
+
+      // Track latest score change for animation (negative value since we're undoing)
+      _latestScoreChange = -lastScore;
+
       // Update current break - this is more complex since we need to figure out
       // how much of the current break was from the last action
       // For now, we'll just set it back to what it was before this score
@@ -130,74 +159,92 @@ class GameProvider extends ChangeNotifier {
       } else {
         player.currentBreak = 0;
       }
+      
+      // Clear last ball scored when undoing
+      _lastBallScored = null;
     }
 
     notifyListeners();
   }
-  
+
   void addFoulScore(String playerId, {int points = 4}) {
     if (_currentGame == null) {
       throw StateError('No active game to add foul to.');
     }
 
-    final playerIndex = _currentGame!.players.indexWhere((p) => p.id == playerId);
+    final playerIndex = _currentGame!.players.indexWhere(
+      (p) => p.id == playerId,
+    );
     if (playerIndex == -1) {
       throw ArgumentError('Player with ID $playerId not found.');
     }
 
     final player = _currentGame!.players[playerIndex];
-    
+
     // In snooker, when a player commits a foul, the opponent typically receives the points
     // For this implementation, we'll add the foul points to the opponent with the highest score
     // or to the first opponent if scores are tied
     List<Player> opponents = [..._currentGame!.players];
     opponents.removeAt(playerIndex);
-    
+
     if (opponents.isNotEmpty) {
       // Find the opponent with the highest score to award the foul points to
       Player opponent = opponents.reduce((a, b) => a.score > b.score ? a : b);
       opponent.score += points;
     }
-    
+
     // Reset the current break for the player who committed the foul
     player.currentBreak = 0;
+    
+    // Clear last ball scored since this is a foul
+    _lastBallScored = null;
 
     notifyListeners();
   }
-  
+
   void applyPenaltyToPlayer(String playerId, {int points = 4}) {
     if (_currentGame == null) {
       throw StateError('No active game to apply penalty to.');
     }
 
-    final playerIndex = _currentGame!.players.indexWhere((p) => p.id == playerId);
+    final playerIndex = _currentGame!.players.indexWhere(
+      (p) => p.id == playerId,
+    );
     if (playerIndex == -1) {
       throw ArgumentError('Player with ID $playerId not found.');
     }
 
     final player = _currentGame!.players[playerIndex];
-    
+
     // Subtract points from the player's score (with a minimum of 0)
     player.score = (player.score - points).clamp(0, player.score);
-    
+
+    // Track latest score change for animation (negative value)
+    _latestScoreChange = -points;
+
     // Reset their current break since they committed a foul
     player.currentBreak = 0;
 
     notifyListeners();
   }
-  
+
   void addDirectScore(String playerId, {required int points}) {
     if (_currentGame == null) {
       throw StateError('No active game to add score to.');
     }
 
-    final playerIndex = _currentGame!.players.indexWhere((p) => p.id == playerId);
+    final playerIndex = _currentGame!.players.indexWhere(
+      (p) => p.id == playerId,
+    );
     if (playerIndex == -1) {
       throw ArgumentError('Player with ID $playerId not found.');
     }
 
     final player = _currentGame!.players[playerIndex];
     player.score += points;
+
+    // Track latest score change for animation
+    _latestScoreChange = points;
 
     // If the points added are significant, check for century break
     if (player.currentBreak == 0) {
@@ -207,42 +254,79 @@ class GameProvider extends ChangeNotifier {
       // If continuing a current break, add to it
       player.currentBreak += points;
     }
-    
+
     // Update highest break if needed
     if (player.currentBreak > player.highestBreak) {
       player.highestBreak = player.currentBreak;
     }
-    
+
     // Check for century break using GameService
     GameService.checkAndRecordCenturyBreak(player);
 
     notifyListeners();
   }
-  
+
+  void applyFoulWithSpecificValue(String playerId, {required int points}) {
+    if (_currentGame == null) {
+      throw StateError('No active game to apply foul to.');
+    }
+
+    final playerIndex = _currentGame!.players.indexWhere(
+      (p) => p.id == playerId,
+    );
+    if (playerIndex == -1) {
+      throw ArgumentError('Player with ID $playerId not found.');
+    }
+
+    final player = _currentGame!.players[playerIndex];
+
+    // Apply the negative score (foul points) to the player's score
+    // Use clamp to ensure the score doesn't go below 0
+    player.score = (player.score + points).clamp(
+      0,
+      999999,
+    ); // Using a large number instead of infinity
+
+    // Track latest score change for animation
+    _latestScoreChange = points;
+
+    // Reset their current break since they committed a foul
+    player.currentBreak = 0;
+    
+    // Clear last ball scored since this is a foul
+    _lastBallScored = null;
+
+    notifyListeners();
+  }
+
   void updateGameTimer() {
     if (_currentGame != null && _currentGame!.gameTimerStart != null) {
-      _currentGame!.gameDuration = DateTime.now().difference(_currentGame!.gameTimerStart!);
+      _currentGame!.gameDuration = DateTime.now().difference(
+        _currentGame!.gameTimerStart!,
+      );
       notifyListeners();
     }
   }
-  
+
   void addStandardBall(String playerId, {required int points}) {
     addScore(playerId, points);
   }
-  
+
   void awardFrameToPlayer(String playerId) {
     if (_currentGame == null) {
       throw StateError('No active game to award frame to.');
     }
 
-    final playerIndex = _currentGame!.players.indexWhere((p) => p.id == playerId);
+    final playerIndex = _currentGame!.players.indexWhere(
+      (p) => p.id == playerId,
+    );
     if (playerIndex == -1) {
       throw ArgumentError('Player with ID $playerId not found.');
     }
 
     final player = _currentGame!.players[playerIndex];
     player.framesWon += 1;
-    
+
     // Start a new frame
     _currentGame!.currentFrame += 1;
 
@@ -255,32 +339,34 @@ class GameProvider extends ChangeNotifier {
     }
     _currentGame!.endTime = DateTime.now();
     _currentGame!.status = GameStatus.completed;
-    
+
     // Update the game duration
     if (_currentGame!.gameTimerStart != null) {
-      _currentGame!.gameDuration = DateTime.now().difference(_currentGame!.gameTimerStart!);
+      _currentGame!.gameDuration = DateTime.now().difference(
+        _currentGame!.gameTimerStart!,
+      );
     }
-    
+
     await _storageService.saveGame(_currentGame!); // Save the completed game
     _gameHistory.add(_currentGame!); // Add to history
     _currentGame = null; // Clear current game
-    
+
     // Stop the timer when the game ends
     _stopTimer();
-    
+
     notifyListeners();
   }
 
   void _startTimer() {
     // Stop any existing timer
     _stopTimer();
-    
+
     // Create a new timer that updates every second
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       updateGameTimer();
     });
   }
-  
+
   void _stopTimer() {
     _timer?.cancel();
     _timer = null;
@@ -291,21 +377,15 @@ class GameProvider extends ChangeNotifier {
     if (_currentGame == null || _currentGame!.gameTimerStart == null) {
       return const Duration();
     }
-    
+
     // If the game is completed, return the stored duration
-    if (_currentGame!.status == GameStatus.completed && _currentGame!.gameDuration != Duration.zero) {
+    if (_currentGame!.status == GameStatus.completed &&
+        _currentGame!.gameDuration != Duration.zero) {
       return _currentGame!.gameDuration;
     }
-    
+
     // Otherwise, calculate the elapsed time from the start
     return DateTime.now().difference(_currentGame!.gameTimerStart!);
-  }
-
-  Future<void> _notifyListenersAsync() async {
-    await Future.microtask(() => {});
-    if (_currentGame != null) {
-      notifyListeners();
-    }
   }
 
   @override

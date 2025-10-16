@@ -1,0 +1,54 @@
+{
+  "test_suite": {
+    "name": "snooker_score_board_tests",
+    "description": "Test suite for the Snooker Score Board Flutter application",
+    "project_type": "flutter",
+    "test_command": "flutter test",
+    "test_directory": "test/",
+    "files": [
+      "test/widget_test.dart",
+      "test/foul_functionality_test.dart",
+      "test/screens/new_game_screen_test.dart",
+      "test/screens/game_board_screen_test.dart",
+      "test/screens/results_screen_test.dart",
+      "test/services/game_service_test.dart"
+    ]
+  },
+  "zen_mcp_config": {
+    "server": "zen",
+    "tools_used": [
+      "debug",
+      "codereview",
+      "testgen"
+    ],
+    "ai_model_preferences": {
+      "primary": "gpt-4o",
+      "fallback": ["claude-3-5-sonnet", "gemini-2.0-flash-exp"]
+    },
+    "test_analysis": {
+      "enabled": true,
+      "generate_reports": true,
+      "track_failures": true
+    }
+  },
+  "test_environment": {
+    "setup_commands": [
+      "flutter pub get"
+    ],
+    "cleanup_commands": [],
+    "required_tools": [
+      "flutter",
+      "dart"
+    ]
+  },
+  "tracking": {
+    "log_directory": ".zen/test_logs",
+    "session_tracking": true,
+    "metrics": [
+      "test_execution_time",
+      "test_pass_rate",
+      "test_coverage",
+      "ai_assistance_requests"
+    ]
+  }
+}

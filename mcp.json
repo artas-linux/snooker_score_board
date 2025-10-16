@@ -1,0 +1,52 @@
+{
+  "mcpServers": {
+    "dart": {
+      "command": "dart",
+      "args": ["mcp-server"],
+      "env": {
+        "DART_PROJECT_ROOT": "."
+      }
+    },
+    "gemini-cli": {
+      "command": "bunx",
+      "args": ["-y", "gemini-mcp-tool"]
+    },
+    "git": {
+      "command": "uvx",
+      "args": ["mcp-server-git"]
+    },
+    "sequential-thinking": {
+      "command": "bunx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ]
+    },
+    "sqlite": {
+      "command": "bunx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sqlite"
+      ]
+    },
+    "openapi": {
+      "command": "bunx",
+      "args": [
+        "-y",
+        "snaggle-ai/openapi-mcp-server"
+      ]
+    },
+    "zen": {
+      "command": "bash",
+      "args": [
+        "-c",
+        "for p in $(which uvx 2>/dev/null) $HOME/.local/share/mise/installs/uv/latest/uv-x86_64-unknown-linux-musl/uvx $HOME/.local/bin/uvx /opt/homebrew/bin/uvx /usr/local/bin/uvx uvx; do [ -x \"$p\" ] && exec \"$p\" --from git+https://github.com/BeehiveInnovations/zen-mcp-server.git zen-mcp-server; done; echo 'uvx not found' >&2; exit 1"
+      ],
+      "cwd": "/home/archbtw/dev/projects/zen-mcp-server",
+      "env": {
+        "PATH": "/home/archbtw/.local/share/mise/installs/uv/latest/uv-x86_64-unknown-linux-musl:/home/archbtw/.local/share/mise/installs/bun/latest/bin:/home/archbtw/.local/share/mise/installs/flutter/latest/bin:/home/archbtw/.local/share/mise/installs/dart/latest/bin:/home/archbtw/.local/share/mise/installs/node/latest/bin:/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin:~/.local/bin",
+        "GEMINI_API_KEY": "${GEMINI_API_KEY}"
+      }
+    }
+  }
+}

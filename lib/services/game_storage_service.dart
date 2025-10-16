@@ -22,7 +22,9 @@ class GameStorageService {
   Future<List<Game>> loadGames() async {
     final prefs = await SharedPreferences.getInstance();
     final List<String> gamesJson = prefs.getStringList(_gamesKey) ?? [];
-    return gamesJson.map((jsonString) => Game.fromMap(jsonDecode(jsonString))).toList();
+    return gamesJson
+        .map((jsonString) => Game.fromMap(jsonDecode(jsonString)))
+        .toList();
   }
 
   Future<void> clearAllGames() async {

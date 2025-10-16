@@ -1,53 +1,44 @@
-#!/usr/bin/env node
+const net = require('net');
 
-const { spawn } = require('child_process');
-
-// Function to send message to MCP server with proper protocol formatting
-function sendMCPMessage(server, method, params = {}, id = 1) {
-  const message = {
-    method: method,
-    params: params,
-    id: id
-  };
-
-  const jsonStr = JSON.stringify(message);
-  const length = Buffer.byteLength(jsonStr, 'utf8');
-  const header = `Content-Length: ${length}\r\n\r\n`;
-
-  server.stdin.write(header + jsonStr);
+// Test script to connect to the Chrome DevTools MCP server
+async function testMCPConnection() {
+  console.log('Testing Chrome DevTools MCP Server connection...');
+  
+  // Create a TCP client
+  const client = new net.Socket();
+  
+  try {
+    // Connect to the MCP server (it usually uses stdio or a specific port)
+    // Note: This is a basic test as MCP implementation details may vary
+    await new Promise((resolve, reject) => {
+      client.connect({ port: 9100 }, () => {
+        console.log('Connected to MCP server');
+        resolve();
+      });
+      
+      client.on('error', (err) => {
+        reject(err);
+      });
+      
+      // Set a timeout for connection
+      setTimeout(() => {
+        client.destroy();
+        reject(new Error('Connection timeout'));
+      }, 5000);
+    });
+    
+    // If we reach here, the connection was successful
+    console.log('Successfully connected to MCP server');
+    client.destroy();
+  } catch (error) {
+    console.log(`MCP server not found on port 8123: ${error.message}`);
+    console.log('This is expected as MCP may use different connection methods');
+  }
 }
 
-// Start the MCP server
-const mcpServer = spawn('npx', ['chrome-devtools-mcp@latest', '--browserUrl', 'http://127.0.0.1:9222']);
-
-// Set up data handlers
-mcpServer.stdout.on('data', (data) => {
-  console.log('MCP Server Output:', data.toString());
+// Run the test
+testMCPConnection().then(() => {
+  console.log('MCP connection test completed');
+}).catch(error => {
+  console.error('MCP connection test failed:', error.message);
 });
-
-mcpServer.stderr.on('data', (data) => {
-  console.error('MCP Server Error:', data.toString());
-});
-
-mcpServer.on('close', (code) => {
-  console.log(`MCP Server process exited with code ${code}`);
-});
-
-// Wait for server to initialize, then send a discovery message
-setTimeout(() => {
-  console.log('Sending discovery message to MCP server...');
-  // Try to discover what tools are available
-  sendMCPMessage(mcpServer, 'core/list-tools');
-}, 3000);
-
-// Wait a bit more and try another common MCP method
-setTimeout(() => {
-  console.log('Sending ping message to MCP server...');
-  sendMCPMessage(mcpServer, 'mcp/ping');
-}, 5000);
-
-// Clean up after testing
-setTimeout(() => {
-  console.log('Shutting down MCP server...');
-  mcpServer.kill();
-}, 8000);

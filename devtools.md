@@ -32,7 +32,7 @@ Flutter DevTools is a suite of performance and debugging tools for Dart and Flut
    ```
 2. Note the Observatory URL and run:
    ```bash
-   dart devtools -d chrome
+   dart devtools -d google-chrome-stable
    # or
    dart devtools --machine --port 9100
    ```

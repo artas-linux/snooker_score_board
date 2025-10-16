@@ -38,7 +38,10 @@ class GameResultsScreen extends StatelessWidget {
                         children: [
                           Semantics(
                             liveRegion: true,
-                            label: AccessibilityUtils.generateScoreLabel(player.name, player.score),
+                            label: AccessibilityUtils.generateScoreLabel(
+                              player.name,
+                              player.score,
+                            ),
                             child: Text(
                               '${player.name}: ${player.score}',
                               style: Theme.of(context).textTheme.headlineSmall,
@@ -54,12 +57,14 @@ class GameResultsScreen extends StatelessWidget {
                           if (player.centuryBreaks.isNotEmpty)
                             Text(
                               'Century Breaks: ${player.centuryBreaks.join(', ')}',
-                              style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.green),
+                              style: Theme.of(context).textTheme.bodySmall!
+                                  .copyWith(color: Colors.green),
                             ),
                           if (player.currentBreak > 0)
                             Text(
                               'Last Break: ${player.currentBreak}',
-                              style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.orange),
+                              style: Theme.of(context).textTheme.bodySmall!
+                                  .copyWith(color: Colors.orange),
                             ),
                         ],
                       ),
@@ -75,7 +80,9 @@ class GameResultsScreen extends StatelessWidget {
                 onPressed: () {
                   // Navigate back to the new game screen
                   Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => const NewGameScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => const NewGameScreen(),
+                    ),
                     (Route<dynamic> route) => false,
                   );
                 },

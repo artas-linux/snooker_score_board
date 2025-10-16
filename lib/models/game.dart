@@ -1,9 +1,6 @@
 import 'package:snooker_score_board/models/player.dart';
 
-enum GameStatus {
-  active,
-  completed,
-}
+enum GameStatus { active, completed }
 
 class Game {
   final String id;
@@ -12,7 +9,8 @@ class Game {
   List<Player> players;
   GameStatus status;
   int currentFrame;
-  int currentFrameScore; // Not strictly needed for individual player scores, but good for overall game context
+  int
+  currentFrameScore; // Not strictly needed for individual player scores, but good for overall game context
   DateTime? gameTimerStart; // Start time for the timer when the game begins
   Duration gameDuration; // The total duration of the game
 
@@ -33,14 +31,20 @@ class Game {
     return Game(
       id: map['id'] as String,
       startTime: DateTime.parse(map['startTime'] as String),
-      endTime: map['endTime'] != null ? DateTime.parse(map['endTime'] as String) : null,
+      endTime: map['endTime'] != null
+          ? DateTime.parse(map['endTime'] as String)
+          : null,
       players: (map['players'] as List)
           .map((playerMap) => Player.fromMap(playerMap as Map<String, dynamic>))
           .toList(),
-      status: GameStatus.values.firstWhere((e) => e.toString() == map['status']),
+      status: GameStatus.values.firstWhere(
+        (e) => e.toString() == map['status'],
+      ),
       currentFrame: map['currentFrame'] as int? ?? 1,
       currentFrameScore: map['currentFrameScore'] as int,
-      gameTimerStart: map['gameTimerStart'] != null ? DateTime.parse(map['gameTimerStart'] as String) : null,
+      gameTimerStart: map['gameTimerStart'] != null
+          ? DateTime.parse(map['gameTimerStart'] as String)
+          : null,
       gameDuration: Duration(milliseconds: map['gameDuration'] as int? ?? 0),
     );
   }
@@ -61,5 +65,6 @@ class Game {
   }
 
   @override
-  String toString() => 'Game(id: $id, startTime: $startTime, status: $status, players: $players)';
+  String toString() =>
+      'Game(id: $id, startTime: $startTime, status: $status, players: $players)';
 }

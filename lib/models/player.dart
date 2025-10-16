@@ -53,5 +53,6 @@ class Player {
 
   // For easy debugging and logging
   @override
-  String toString() => 'Player(id: $id, name: $name, score: $score, centuryBreaks: $centuryBreaks)';
+  String toString() =>
+      'Player(id: $id, name: $name, score: $score, centuryBreaks: $centuryBreaks)';
 }

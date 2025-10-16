@@ -53,7 +53,10 @@ class _NewGameScreenState extends State<NewGameScreen> {
         return;
       }
 
-      Provider.of<GameProvider>(context, listen: false).startNewGame(playerNames);
+      Provider.of<GameProvider>(
+        context,
+        listen: false,
+      ).startNewGame(playerNames);
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const GameBoardScreen()),
@@ -88,9 +91,10 @@ class _NewGameScreenState extends State<NewGameScreen> {
                     style: TextStyle(
                       fontSize: 36,
                       fontWeight: FontWeight.bold,
-                      foreground: Paint()..shader = LinearGradient(
-                        colors: [Colors.red.shade700, Colors.black87]
-                      ).createShader(Rect.fromLTWH(0, 0, 200, 50)),
+                      foreground: Paint()
+                        ..shader = LinearGradient(
+                          colors: [Colors.red.shade700, Colors.black87],
+                        ).createShader(Rect.fromLTWH(0, 0, 200, 50)),
                       shadows: [
                         Shadow(
                           offset: Offset(3.0, 3.0),
@@ -120,7 +124,9 @@ class _NewGameScreenState extends State<NewGameScreen> {
                 icon: const Icon(Icons.history),
                 onPressed: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const GameHistoryScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => const GameHistoryScreen(),
+                    ),
                   );
                 },
               ),
@@ -141,16 +147,22 @@ class _NewGameScreenState extends State<NewGameScreen> {
                                 Expanded(
                                   child: Semantics(
                                     explicitChildNodes: true,
-                                    label: AccessibilityUtils.generatePlayerLabel(index, 'Player ${index + 1}'),
+                                    label:
+                                        AccessibilityUtils.generatePlayerLabel(
+                                          index,
+                                          'Player ${index + 1}',
+                                        ),
                                     child: TextFormField(
                                       controller: _playerControllers[index],
                                       decoration: InputDecoration(
                                         labelText: 'Player ${index + 1} Name',
                                         border: const OutlineInputBorder(),
-                                        semanticCounterText: 'Player ${index + 1} name field',
+                                        semanticCounterText:
+                                            'Player ${index + 1} name field',
                                       ),
                                       validator: (value) {
-                                        if (value == null || value.trim().isEmpty) {
+                                        if (value == null ||
+                                            value.trim().isEmpty) {
                                           return 'Player name cannot be empty';
                                         }
                                         return null;
@@ -158,13 +170,17 @@ class _NewGameScreenState extends State<NewGameScreen> {
                                     ),
                                   ),
                                 ),
-                                if (_playerControllers.length > 2) // Allow removing if more than 2 players
+                                if (_playerControllers.length >
+                                    2) // Allow removing if more than 2 players
                                   Semantics(
                                     button: true,
                                     label: 'Remove player ${index + 1}',
                                     child: IconButton(
-                                      icon: const Icon(Icons.remove_circle_outline),
-                                      onPressed: () => _removePlayerField(index),
+                                      icon: const Icon(
+                                        Icons.remove_circle_outline,
+                                      ),
+                                      onPressed: () =>
+                                          _removePlayerField(index),
                                     ),
                                   ),
                               ],
@@ -188,7 +204,8 @@ class _NewGameScreenState extends State<NewGameScreen> {
                         const SizedBox(width: 16.0),
                         Semantics(
                           button: true,
-                          label: 'Start the snooker game with the entered players',
+                          label:
+                              'Start the snooker game with the entered players',
                           child: ElevatedButton.icon(
                             onPressed: _startGame,
                             icon: const Icon(Icons.play_arrow),

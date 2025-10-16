@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-import 'package:snooker_score_board/models/player.dart';
+
 import 'package:snooker_score_board/providers/game_provider.dart';
 import 'package:snooker_score_board/ui/screens/game_board_screen.dart';
 
 void main() {
   group('GameBoardScreen Tests', () {
-    testWidgets('should display players and their scores', (WidgetTester tester) async {
+    testWidgets('should display players and their scores', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: ChangeNotifierProvider(
-            create: (context) => GameProvider()
-              ..startNewGame(['Player 1', 'Player 2']),
+            create: (context) =>
+                GameProvider()..startNewGame(['Player 1', 'Player 2']),
             child: const GameBoardScreen(),
           ),
         ),
@@ -58,7 +60,9 @@ void main() {
       expect(find.text('Player 2: 0'), findsOneWidget);
     });
 
-    testWidgets('should apply foul penalties correctly', (WidgetTester tester) async {
+    testWidgets('should apply foul penalties correctly', (
+      WidgetTester tester,
+    ) async {
       final gameProvider = GameProvider();
       gameProvider.startNewGame(['Player 1', 'Player 2']);
 
@@ -90,7 +94,9 @@ void main() {
       expect(find.text('Player 2: 4'), findsOneWidget);
     });
 
-    testWidgets('should handle undo functionality', (WidgetTester tester) async {
+    testWidgets('should handle undo functionality', (
+      WidgetTester tester,
+    ) async {
       final gameProvider = GameProvider();
       gameProvider.startNewGame(['Player 1', 'Player 2']);
 

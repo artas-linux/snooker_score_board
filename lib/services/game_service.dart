@@ -12,7 +12,8 @@ class GameService {
     if (isCenturyBreak(player)) {
       // Only add to century breaks list if it's not already recorded
       if (!player.centuryBreaks.contains(player.currentBreak)) {
-        player.centuryBreaks = List.from(player.centuryBreaks)..add(player.currentBreak);
+        player.centuryBreaks = List.from(player.centuryBreaks)
+          ..add(player.currentBreak);
       }
     }
   }
@@ -20,24 +21,24 @@ class GameService {
   /// Calculate the winner of a completed game
   static Player? getGameWinner(Game game) {
     if (game.players.isEmpty) return null;
-    
+
     // Sort players by score in descending order and return the first one
     List<Player> sortedPlayers = List.from(game.players)
       ..sort((a, b) => b.score.compareTo(a.score));
-    
+
     return sortedPlayers.first;
   }
 
   /// Format the game duration for display
   static String getGameDuration(Game game) {
-    if (game.startTime == null || game.endTime == null) {
+    if (game.endTime == null) {
       return 'In Progress';
     }
 
-    Duration duration = game.endTime!.difference(game.startTime!);
+    Duration duration = game.endTime!.difference(game.startTime);
     int minutes = duration.inMinutes;
     int seconds = duration.inSeconds.remainder(60);
-    
+
     return '${minutes}m ${seconds}s';
   }
 
@@ -54,7 +55,7 @@ class GameService {
   static List<Player> getCurrentStandings(Game game) {
     List<Player> sortedPlayers = List.from(game.players)
       ..sort((a, b) => b.score.compareTo(a.score));
-    
+
     return sortedPlayers;
   }
 
@@ -72,24 +73,27 @@ class GameService {
   /// Calculate the break average for a player
   static double getBreakAverage(Player player) {
     if (player.centuryBreaks.isEmpty) return 0.0;
-    int totalPoints = player.centuryBreaks.fold(0, (sum, breakValue) => sum + breakValue);
+    int totalPoints = player.centuryBreaks.fold(
+      0,
+      (sum, breakValue) => sum + breakValue,
+    );
     return totalPoints / player.centuryBreaks.length;
   }
 
   /// Determine the player with the highest break in the game
   static Player? getPlayerWithHighestBreak(Game game) {
     if (game.players.isEmpty) return null;
-    
+
     Player? playerWithHighestBreak;
     int highestBreak = 0;
-    
+
     for (Player player in game.players) {
       if (player.highestBreak > highestBreak) {
         highestBreak = player.highestBreak;
         playerWithHighestBreak = player;
       }
     }
-    
+
     return playerWithHighestBreak;
   }
 }

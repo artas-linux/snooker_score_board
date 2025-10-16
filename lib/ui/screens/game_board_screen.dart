@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:snooker_score_board/providers/game_provider.dart';
 import 'package:snooker_score_board/ui/screens/game_results_screen.dart';
-import 'package:snooker_score_board/ui/utils/notification_utils.dart';
-import 'package:snooker_score_board/ui/widgets/snooker_score_controls.dart';
-import 'package:snooker_score_board/ui/widgets/score_animation_widget.dart';
+
 import 'package:snooker_score_board/ui/widgets/stopwatch_widget.dart';
+import 'package:snooker_score_board/ui/widgets/player_score_card.dart';
 
 class GameBoardScreen extends StatefulWidget {
   const GameBoardScreen({super.key});
@@ -21,8 +20,6 @@ class _GameBoardScreenState extends State<GameBoardScreen> {
   void initState() {
     super.initState();
   }
-
-
 
   @override
   void dispose() {
@@ -55,14 +52,14 @@ class _GameBoardScreenState extends State<GameBoardScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-
                     Text(
                       'Current Frame: ${currentGame.currentFrame}',
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).primaryColor,
-                      ),
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).primaryColor,
+                          ),
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -91,133 +88,21 @@ class _GameBoardScreenState extends State<GameBoardScreen> {
                 itemCount: currentGame.players.length,
                 itemBuilder: (context, index) {
                   final player = currentGame.players[index];
-                  return GestureDetector(
-                    onTap: () {
+                  return AnimatedPlayerScoreCard(
+                    player: player,
+                    selectedPlayerId: _selectedPlayerId,
+                    onPlayerTap: (playerId) {
                       setState(() {
-                        if (_selectedPlayerId == player.id) {
-                          _selectedPlayerId = null;  // Deselect if already selected
+                        if (_selectedPlayerId == playerId) {
+                          _selectedPlayerId =
+                              null; // Deselect if already selected
                         } else {
-                          _selectedPlayerId = player.id;  // Select this player
+                          _selectedPlayerId = playerId; // Select this player
                         }
                       });
-                      NotificationUtils.showPopupNotification(
-                        context,
-                        '${_selectedPlayerId == player.id ? 'Selected' : 'Deselected'} ${player.name}',
-                      );
                     },
-                    child: Card(
-                      margin: const EdgeInsets.symmetric(vertical: 8.0),
-                      color: _selectedPlayerId == player.id ? Colors.grey.shade800 : null, // Dark grey instead of bright color when selected
-                      elevation: _selectedPlayerId == player.id ? 8 : 2, // Higher elevation when selected
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Player header with animated score and action buttons
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Consumer<GameProvider>(
-                                    builder: (context, gameProvider, child) {
-                                      // Get the previous score for animation
-                                      int previousScore = 0;
-                                      if (gameProvider.currentGame != null) {
-                                        var playerInGame = gameProvider.currentGame!.players
-                                            .firstWhere((p) => p.id == player.id, orElse: () => player);
-                                        previousScore = playerInGame.score - 
-                                            (playerInGame.scoreHistory.isNotEmpty 
-                                                ? playerInGame.scoreHistory.last : 0);
-                                      }
-                                      
-                                      return ScoreChangeAnimation(
-                                        previousScore: previousScore,
-                                        newScore: player.score,
-                                        color: _selectedPlayerId == player.id ? (player.score > previousScore ? Colors.green : Colors.red) : null,
-                                        child: Text(
-                                          '${player.name}: ${player.score}',
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: _selectedPlayerId == player.id ? Colors.white : null, // White text when selected
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(Icons.undo, color: Colors.orange),
-                                      onPressed: () {
-                                        Provider.of<GameProvider>(context, listen: false).undoLastScore(player.id);
-                                        NotificationUtils.showPopupNotification(
-                                          context,
-                                          'Last score undone for ${player.name}',
-                                        );
-                                      },
-                                      tooltip: 'Undo Last Score',
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            
-                            // Additional player stats
-                            Wrap(
-                              spacing: 16.0,
-                              runSpacing: 4.0,
-                              alignment: WrapAlignment.start,
-                              children: [
-                                Text('Frames: ${player.framesWon}',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: _selectedPlayerId == player.id ? Colors.white70 : Colors.grey.shade700,
-                                  ),
-                                ),
-                                Text('Highest Break: ${player.highestBreak}',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: _selectedPlayerId == player.id ? Colors.white70 : Colors.grey.shade700,
-                                  ),
-                                ),
-                                if (player.currentBreak > 0)
-                                  Text(
-                                    'Current Break: ${player.currentBreak}',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: _selectedPlayerId == player.id ? Colors.blue.shade200 : Colors.blue.shade700,
-                                    ),
-                                  ),
-                                if (player.centuryBreaks.isNotEmpty)
-                                  Text(
-                                    'Century Breaks: ${player.centuryBreaks.length}',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: _selectedPlayerId == player.id ? Colors.green.shade200 : Colors.green.shade700,
-                                    ),
-                                  ),
-                              ],
-                            ),
-                            
-                            const SizedBox(height: 12),
-                            
-                            // Snooker-specific controls (now just two buttons)
-                            SnookerScoreControls(
-                              playerId: player.id,
-                              playerName: player.name,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    previousScore: 0, // Will be handled by the widget itself
+                    latestScoreChange: gameProvider.latestScoreChange,
                   );
                 },
               ),
@@ -231,7 +116,8 @@ class _GameBoardScreenState extends State<GameBoardScreen> {
                     gameProvider.endGame();
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
-                        builder: (context) => GameResultsScreen(completedGame: currentGame),
+                        builder: (context) =>
+                            GameResultsScreen(completedGame: currentGame),
                       ),
                     );
                   },

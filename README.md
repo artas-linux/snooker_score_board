@@ -8,6 +8,7 @@
 - 🎯 Snooker-specific scoring (ball values: Red=1, Yellow=2, Green=3, Brown=4, Blue=5, Pink=6, Black=7)
 - 🏆 Frame tracking and management
 - 🔥 Break tracking with century break detection
+- 🤖 AI-assisted development with zen-mcp-server integration for enhanced coding workflows
 - ⚠️ Foul penalty handling
 - 📊 Game history storage and retrieval
 - ↩️ Undo functionality for scores
@@ -58,7 +59,7 @@ mise run dev
 
 To run the web version:
 ```
-flutter run -d chrome
+flutter run -d google-chrome-stable
 ```
 
 Or using mise:
@@ -139,3 +140,20 @@ This project is available as-is without any warranty. It is not licensed for com
 ## 🌐 Live Demo
 
 Check out the live demo: https://artas-linux.github.io/snooker_score_board/ 🌟
+
+## 🤖 AI-Assisted Development with Zen-MCP Server
+
+This project leverages the zen-mcp-server for AI-assisted development workflows, providing:
+
+- Intelligent code suggestions and completions
+- Context-aware assistance based on project structure
+- Session tracking and analytics for development patterns
+- Enhanced debugging and code review capabilities
+- Automated documentation and testing generation
+
+The integration is configured through:
+- `mcp.json` - Main MCP server configuration
+- `.qwen/settings.json` - Qwen-specific settings
+- `.zen/project_config.json` - Project-specific tracking settings
+
+For more details about the zen-mcp-server integration, see [ZEN_MCP_TRACKING.md](ZEN_MCP_TRACKING.md).

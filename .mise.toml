@@ -1,25 +1,281 @@
-# Install dependencies
-[tasks.install]
-alias = "i"
-run = "flutter pub get"
+# ============================================================
+# 🎱 Snooker Score Board - GNG Boys
+# Spec Driven Flutter Project Configuration
+# ============================================================
 
-# Run the application
+[tools]
+flutter = "latest"
+dart = "latest"
+bun = "latest"
+
+# ===== 🚀 Daily Development Flow =====
+
+[tasks.setup]
+description = "🚀 Initial project setup"
+run = [
+    "echo '🚀 Starting Snooker Score Board setup...'",
+    "flutter doctor -v",
+    "flutter pub get",
+    "dart pub run build_runner build --delete-conflicting-outputs",
+    "bun install -g firebase-tools",
+    "echo '✅ Setup complete!'",
+    "echo ''",
+    "echo '📌 Next steps:'",
+    "echo '  mise run dev        # Start development server'",
+    "echo '  mise run dev-web    # Test web build'",
+    "echo '  mise run mcp        # Start MCP server'",
+]
+
 [tasks.dev]
-run = "flutter run"
+description = "🏃 Run Flutter development server"
+run = [
+    "echo '🏃 Launching Flutter in debug mode...'",
+    "flutter run",
+]
 
-[tasks.run-web]
-run = "flutter run -d chrome"
+[tasks.dev-web]
+description = "🌐 Start Flutter web development server"
+run = [
+    "echo '🌐 Starting web server (Chrome)...'",
+    "flutter run -d web-server --web-port 8080",
+]
+
+[tasks.restart-web]
+description = "🔄 Restart Flutter web development server"
+run = '''
+#!/usr/bin/env bash
+set -e
+echo '🔄 Killing all Flutter processes...'
+pkill -f flutter 2>/dev/null || true
+echo '🔄 Killing all processes on port 8080...'
+fuser -k 8080/tcp 2>/dev/null || true
+echo '🔄 Waiting for processes to fully terminate...'
+sleep 2
+echo '🔄 Restarting web development server...'
+flutter run -d web-server --web-port 8080
+'''
+
+[tasks.kill-port]
+description = "💀 Kill processes on port 8080 and Flutter/Dart processes"
+run = '''#!/usr/bin/env bash
+set -e
+echo '💀 Killing all Flutter processes...'
+pkill -f flutter 2>/dev/null || true
+echo '💀 Killing all Dart processes...'
+pkill -f dart 2>/dev/null || true
+echo '💀 Killing all processes on port 8080...'
+fuser -k 8080/tcp 2>/dev/null || true
+echo '✅ Processes on port 8080 and Flutter/Dart processes killed'
+'''
+
+[tasks.clean-run-web]
+description = "🚀 Kill old processes and run web server"
+run = '''#!/usr/bin/env bash
+set -e
+echo '🔄 Cleaning old processes...'
+mise run kill-port
+echo '⏳ Waiting for processes to fully terminate...'
+sleep 3
+echo '🌐 Starting web development server...'
+flutter run -d web-server --web-port 8080
+'''
+
+[tasks.gen]
+description = "🔨 Run code generation"
+run = [
+    "echo '🔨 Running build_runner for code generation...'",
+    "dart pub run build_runner build --delete-conflicting-outputs",
+    "echo '✅ Code generation complete'",
+]
+
+[tasks.fix]
+description = "🔧 Analyze, format, and fix code"
+run = [
+    "echo '🔧 Checking code quality...'",
+    "dart format lib/ test/",
+    "flutter analyze",
+    "echo '✅ Code quality check complete'",
+]
 
 [tasks.test]
-run = "flutter test"
+description = "🧪 Run tests (with coverage)"
+run = [
+    "echo '🧪 Running tests...'",
+    "flutter test --coverage",
+    "echo '📊 Coverage report: coverage/lcov.info'",
+    "echo '💡 Tip: run mise run coverage to generate an HTML report'",
+]
 
-# Build the application (Android)
-[tasks.build]
-run = "flutter build apk"
+[tasks.web-perf-test]
+description = "📈 Run Flutter web server performance test"
+run = [
+    "echo '🚀 Starting Flutter web server performance test...'",
+    "node flutter_web_performance_test.js",
+    "echo '✅ Web performance test completed'",
+]
+
+# ===== 👀 Dev Utilities =====
+
+[tasks.watch]
+description = "👀 Watch for file changes and auto-generate code"
+run = [
+    "echo '👀 Starting build_runner watch mode...'",
+    "dart pub run build_runner watch --delete-conflicting-outputs",
+]
+
+[tasks.coverage]
+description = "📊 Generate HTML coverage report"
+run = [
+    "if [ ! -f coverage/lcov.info ]; then echo '⚠️  Coverage file not found. Run mise run test first.'; exit 1; fi",
+    "genhtml coverage/lcov.info -o coverage/html --ignore-errors source",
+    "echo '✅ Report generated at coverage/html/index.html'",
+]
+
+# ===== 📦 Build Targets =====
+
+[tasks.build-android]
+description = "🤖 Build Android APK/AAB"
+run = [
+    "echo '🤖 Building Android release...'",
+    "flutter pub get",
+    "dart pub run build_runner build --delete-conflicting-outputs",
+    "flutter build appbundle --release",
+    "echo '✅ Done: build/app/outputs/bundle/release/app-release.aab'",
+]
+
+[tasks.build-ios]
+description = "🍎 Build iOS IPA"
+run = [
+    "echo '🍎 Building iOS release...'",
+    "flutter pub get",
+    "dart pub run build_runner build --delete-conflicting-outputs",
+    "flutter build ipa --release",
+    "echo '✅ Done: build/ios/ipa/*.ipa'",
+]
 
 [tasks.build-web]
-run = "flutter build web"
+description = "🌐 Build web release"
+run = [
+    "echo '🌐 Building web version...'",
+    "flutter pub get",
+    "dart pub run build_runner build --delete-conflicting-outputs",
+    "flutter build web --release",
+    "echo '✅ Web build complete: build/web/'",
+]
 
-# Clean the project
+# ===== 🧹 Maintenance =====
+
 [tasks.clean]
-run = "flutter clean"
+description = "🧹 Clean and rebuild the project"
+run = [
+    "echo '🧹 Cleaning Flutter project...'",
+    "flutter clean",
+    "flutter pub get",
+    "echo '✅ Cleanup complete'",
+]
+
+[tasks.upgrade]
+description = "⬆️ Update dependencies to latest versions"
+run = [
+    "flutter pub upgrade",
+    "dart pub run build_runner clean",
+    "dart pub run build_runner build --delete-conflicting-outputs",
+    "echo '✅ Dependencies updated successfully'",
+]
+
+# ===== 🔥 External Integrations =====
+
+[tasks.firebase]
+description = "🔥 Configure Firebase project"
+run = [
+    "firebase login",
+    "firebase init",
+    "echo '✅ Firebase setup complete'",
+]
+
+# ===== 🧠 MCP & AI DevTools =====
+
+[tasks.mcp]
+description = "🧠 Start Model Context Protocol DevTools"
+run = [
+    "echo '🧠 Starting MCP Chrome DevTools Server...'",
+    "mcp-devtools --port 9100",
+    "echo '✅ MCP Server: http://127.0.0.1:9100'",
+]
+
+[tasks.mcp-dart]
+description = "🧠 Start Dart Model Context Protocol Server"
+run = [
+    "echo '🧠 Starting MCP Dart Server...'",
+    "dart mcp-server",
+    "echo '✅ Dart MCP Server started'",
+]
+
+[tasks.mcp-git]
+description = "🧠 Start Git Model Context Protocol Server"
+run = [
+    "echo '🧠 Starting MCP Git Server...'",
+    "uvx mcp-server-git",
+    "echo '✅ Git MCP Server started'",
+]
+
+[tasks.mcp-sqlite]
+description = "🧠 Start SQLite Model Context Protocol Server"
+run = [
+    "echo '🧠 Starting MCP SQLite Server...'",
+    "bunx -y @modelcontextprotocol/server-sqlite",
+    "echo '✅ SQLite MCP Server started'",
+]
+
+[tasks.mcp-sequential]
+description = "🧠 Start Sequential Thinking Model Context Protocol Server"
+run = [
+    "echo '🧠 Starting MCP Sequential Thinking Server...'",
+    "bunx -y @modelcontextprotocol/server-sequential-thinking",
+    "echo '✅ Sequential Thinking MCP Server started'",
+]
+
+[tasks.mcp-all]
+description = "🧠 Start All Model Context Protocol Servers"
+run = [
+    "echo '🧠 Starting All MCP Servers in Background...'",
+    "dart mcp-server &",
+    "uvx mcp-server-git &",
+    "bunx -y @modelcontextprotocol/server-sqlite &",
+    "bunx -y @modelcontextprotocol/server-sequential-thinking &",
+    "echo '✅ All MCP servers started in background'",
+]
+
+[tasks.web-ai]
+description = "🤖 Launch Flutter Web + MCP AI Integration Mode"
+run = [
+    "mise run dev-web & mise run mcp",
+    "echo '✅ Both dev-web and mcp servers are running'",
+    "echo '🌐 Web server: http://localhost:8080'",
+    "echo '🧠 MCP server: http://127.0.0.1:9100'",
+    "google-chrome-stable http://localhost:8080",
+]
+
+# ===== ❓ Help =====
+
+[tasks.help]
+description = "❓ Show available commands"
+run = [
+    "echo '🛠️ Snooker Score Board - Command Reference'",
+    "echo '--------------------------------------------------'",
+    "echo '🚀 setup         Initial project setup'",
+    "echo '🏃 dev           Start development server'",
+    "echo '🌐 dev-web       Start web server'",
+    "echo '🔄 restart-web   Restart web server'",
+    "echo '🧠 mcp           Start MCP DevTools server'",
+    "echo '🤖 web-ai        Launch Web + AI mode'",
+    "echo '📈 perf-test     Web server performance test'",
+    "echo '🔨 gen           Run code generation'",
+    "echo '🧪 test          Run tests'",
+    "echo '📦 build-*       Build targets (android / ios / web)'",
+    "echo '🧹 clean         Clean project'",
+    "echo '⬆️ upgrade       Update dependencies'",
+    "echo '🔥 firebase      Firebase setup'",
+    "echo '👀 watch         Watch files for changes'",
+    "echo '📊 coverage      Generate HTML coverage report'",
+]

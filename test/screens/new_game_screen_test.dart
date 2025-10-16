@@ -6,7 +6,9 @@ import 'package:snooker_score_board/ui/screens/new_game_screen.dart';
 
 void main() {
   group('NewGameScreen Tests', () {
-    testWidgets('should start a new game with players', (WidgetTester tester) async {
+    testWidgets('should start a new game with players', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: ChangeNotifierProvider(
@@ -28,7 +30,9 @@ void main() {
       expect(find.text('Snooker Game - Frame 1'), findsOneWidget);
     });
 
-    testWidgets('should validate that at least 2 players are entered', (WidgetTester tester) async {
+    testWidgets('should validate that at least 2 players are entered', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: ChangeNotifierProvider(
@@ -47,10 +51,15 @@ void main() {
       await tester.pump();
 
       // Check if error message is shown
-      expect(find.text('Please enter at least 2 player names.'), findsOneWidget);
+      expect(
+        find.text('Please enter at least 2 player names.'),
+        findsOneWidget,
+      );
     });
 
-    testWidgets('should allow adding and removing player fields', (WidgetTester tester) async {
+    testWidgets('should allow adding and removing player fields', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: ChangeNotifierProvider(

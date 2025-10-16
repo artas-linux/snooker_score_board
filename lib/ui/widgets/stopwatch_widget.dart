@@ -12,10 +12,7 @@ class StopwatchWidget extends StatelessWidget {
         if (gameProvider.currentGame == null) {
           return const Text(
             '00:00',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           );
         }
 
@@ -25,7 +22,8 @@ class StopwatchWidget extends StatelessWidget {
         String twoDigitMinutes = twoDigits(elapsed.inMinutes.remainder(60));
         String twoDigitSeconds = twoDigits(elapsed.inSeconds.remainder(60));
 
-        String timeString = '${twoDigits(elapsed.inHours)}:$twoDigitMinutes:$twoDigitSeconds';
+        String timeString =
+            '${twoDigits(elapsed.inHours)}:$twoDigitMinutes:$twoDigitSeconds';
 
         return Text(
           timeString,

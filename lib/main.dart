@@ -7,9 +7,7 @@ import 'package:snooker_score_board/ui/themes/app_theme.dart';
 void main() {
   runApp(
     MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => GameProvider()),
-      ],
+      providers: [ChangeNotifierProvider(create: (_) => GameProvider())],
       child: const MyApp(),
     ),
   );

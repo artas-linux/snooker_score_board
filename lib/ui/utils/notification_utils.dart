@@ -15,12 +15,8 @@ class NotificationUtils {
 
     // Create a new overlay entry
     _overlayEntry = OverlayEntry(
-      builder: (context) => _buildNotification(
-        context,
-        message,
-        backgroundColor,
-        textColor,
-      ),
+      builder: (context) =>
+          _buildNotification(context, message, backgroundColor, textColor),
     );
 
     // Add the overlay entry to the overlay
@@ -39,8 +35,11 @@ class NotificationUtils {
     final Size screenSize = MediaQuery.of(context).size;
 
     return Positioned(
-      top: 50, // Position it at the top, but you can change to 'top: null, bottom: null' for center
-      left: (screenSize.width - 300) / 2, // Center horizontally with a max width of 300
+      top:
+          50, // Position it at the top, but you can change to 'top: null, bottom: null' for center
+      left:
+          (screenSize.width - 300) /
+          2, // Center horizontally with a max width of 300
       child: AnimatedOpacity(
         opacity: 1.0,
         duration: const Duration(milliseconds: 300),
@@ -52,7 +51,7 @@ class NotificationUtils {
             borderRadius: BorderRadius.circular(8),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.black.withValues(alpha: 0.3),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -97,12 +96,8 @@ class NotificationUtils {
 
     // Create a new overlay entry
     _overlayEntry = OverlayEntry(
-      builder: (context) => _buildPopupNotification(
-        context,
-        message,
-        backgroundColor,
-        textColor,
-      ),
+      builder: (context) =>
+          _buildPopupNotification(context, message, backgroundColor, textColor),
     );
 
     // Add the overlay entry to the overlay
@@ -121,7 +116,8 @@ class NotificationUtils {
     final Size screenSize = MediaQuery.of(context).size;
 
     return Positioned(
-      top: screenSize.height / 3, // Position it in the upper third of the screen
+      top:
+          screenSize.height / 3, // Position it in the upper third of the screen
       left: (screenSize.width - 280) / 2,
       child: AnimatedScale(
         scale: 1.0,
@@ -137,7 +133,7 @@ class NotificationUtils {
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.4),
+                  color: Colors.black.withValues(alpha: 0.4),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -146,11 +142,7 @@ class NotificationUtils {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  Icons.notifications,
-                  color: textColor,
-                  size: 48,
-                ),
+                Icon(Icons.notifications, color: textColor, size: 48),
                 const SizedBox(height: 12),
                 Text(
                   message,
